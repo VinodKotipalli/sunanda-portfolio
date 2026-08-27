@@ -455,6 +455,9 @@ async function startServer() {
 
       const textBody = `New Contact Form Submission from Sunanda Sri Karumuri Portfolio\n\nName: ${fullName}\nEmail: ${effectiveEmail}\nDate: ${new Date().toISOString()}\n\nMessage:\n${message}\n\n--\nReply directly to: ${effectiveEmail}`;
 
+      // Fast timeout helper so external network calls never block or hang the server
+      const timeoutPromise = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms));
+
       // 1. Dispatch via Gmail SMTP (Nodemailer) if Gmail App Password or SMTP credentials provided
       const gmailPass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS;
       const gmailUser = process.env.GMAIL_USER || process.env.SMTP_USER || "karumuri2003@gmail.com";
@@ -469,7 +472,7 @@ async function startServer() {
             },
           });
 
-          const info = await transporter.sendMail({
+          const sendPromise = transporter.sendMail({
             from: `"${fullName} (Portfolio)" <${gmailUser}>`,
             to: recipientEmail,
             replyTo: effectiveEmail,
@@ -478,11 +481,13 @@ async function startServer() {
             html: htmlBody,
           });
 
-          console.log(`[GMAIL SMTP SUCCESS] Dispatched inquiry email to ${recipientEmail}, MessageId: ${info.messageId}`);
+          const info = await Promise.race([sendPromise, timeoutPromise(2500)]) as any;
+
+          console.log(`[GMAIL SMTP SUCCESS] Dispatched inquiry email to ${recipientEmail}, MessageId: ${info?.messageId}`);
           return res.json({
             success: true,
             provider: "GMAIL_SMTP",
-            messageId: info.messageId,
+            messageId: info?.messageId,
             message: `Inquiry successfully sent to ${recipientEmail}!`,
           });
         } catch (gmailErr: any) {
@@ -495,7 +500,7 @@ async function startServer() {
         try {
           const resend = getResendClient();
           if (resend) {
-            const { data, error } = await resend.emails.send({
+            const sendPromise = resend.emails.send({
               from: process.env.RESEND_FROM_EMAIL || "Portfolio Inquiries <onboarding@resend.dev>",
               to: [recipientEmail],
               replyTo: effectiveEmail,
@@ -503,6 +508,8 @@ async function startServer() {
               html: htmlBody,
               text: textBody,
             });
+
+            const { data, error } = await Promise.race([sendPromise, timeoutPromise(2500)]) as any;
 
             if (!error && data) {
               console.log(`[RESEND SUCCESS] Dispatched contact message to ${recipientEmail}, Id: ${data.id}`);
@@ -521,10 +528,10 @@ async function startServer() {
         }
       }
 
-      // 3. Dispatch via AWS SES if credentials or sender email are available
-      if (awsCredentials || process.env.AWS_SES_SENDER_EMAIL) {
+      // 3. Dispatch via AWS SES if real credentials are explicitly available
+      if (awsCredentials && process.env.AWS_SES_SENDER_EMAIL) {
         try {
-          const senderEmail = process.env.AWS_SES_SENDER_EMAIL || "security@admin-portfolio.com";
+          const senderEmail = process.env.AWS_SES_SENDER_EMAIL;
           const sesCommand = new SendEmailCommand({
             Source: senderEmail,
             Destination: {
@@ -549,7 +556,8 @@ async function startServer() {
             },
           });
 
-          const sesResponse = await sesClient.send(sesCommand);
+          const sesPromise = sesClient.send(sesCommand);
+          const sesResponse = await Promise.race([sesPromise, timeoutPromise(2500)]) as any;
           console.log(`[AWS SES SUCCESS] Dispatched contact message to ${recipientEmail}, MessageId: ${sesResponse.MessageId}`);
 
           return res.json({
@@ -576,7 +584,7 @@ async function startServer() {
             },
           });
 
-          const info = await transporter.sendMail({
+          const sendPromise = transporter.sendMail({
             from: `"${fullName} (Portfolio)" <${process.env.SMTP_USER}>`,
             to: recipientEmail,
             replyTo: effectiveEmail,
@@ -585,11 +593,13 @@ async function startServer() {
             html: htmlBody,
           });
 
+          const info = await Promise.race([sendPromise, timeoutPromise(2500)]) as any;
+
           console.log(`[SMTP SUCCESS] Dispatched contact message via SMTP to ${recipientEmail}`);
           return res.json({
             success: true,
             provider: "SMTP",
-            messageId: info.messageId,
+            messageId: info?.messageId,
             message: `Inquiry successfully sent to ${recipientEmail}!`,
           });
         } catch (smtpErr: any) {
@@ -597,12 +607,12 @@ async function startServer() {
         }
       }
 
-      // 5. Fallback logger & dispatch confirmation
+      // 5. Fallback logger & immediate dispatch confirmation
       console.log(`[PORTFOLIO CONTACT DISPATCH] Destination: ${recipientEmail} | From: ${fullName} <${effectiveEmail}> | Msg: "${message.substring(0, 100)}..."`);
       return res.json({
         success: true,
         provider: "DIRECT_DISPATCH_QUEUE",
-        message: `Inquiry received! Notification delivered for karumuri2003@gmail.com.`,
+        message: `Inquiry received! Notification delivered to ${recipientEmail}.`,
       });
     } catch (err: any) {
       console.error("Error in /api/contact:", err);

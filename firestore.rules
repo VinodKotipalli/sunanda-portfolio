@@ -21,10 +21,11 @@ service cloud.firestore {
 
     function isValidMessage(data) {
       return data.keys().hasAll(['first_name', 'user_email', 'message', 'createdAt'])
-        && data.keys().hasOnly(['sender_uid', 'sender_email', 'sender_name', 'sender_photo', 'first_name', 'last_name', 'user_email', 'message', 'createdAt'])
+        && data.keys().hasOnly(['sender_uid', 'sender_email', 'sender_name', 'sender_photo', 'first_name', 'last_name', 'user_email', 'message', 'recipient', 'createdAt'])
         && data.first_name is string && data.first_name.size() > 0 && data.first_name.size() <= 100
         && (data.keys().hasAny(['last_name']) ? (data.last_name is string && data.last_name.size() <= 100) : true)
         && data.user_email is string && data.user_email.size() > 0 && data.user_email.size() <= 200 && data.user_email.matches('^.+@.+$')
+        && (data.keys().hasAny(['recipient']) ? (data.recipient is string && data.recipient.size() <= 200) : true)
         && (data.keys().hasAny(['sender_uid']) ? (data.sender_uid is string && data.sender_uid.size() <= 128 && (!isSignedIn() || data.sender_uid == request.auth.uid)) : true)
         && (data.keys().hasAny(['sender_email']) ? (data.sender_email is string && data.sender_email.size() <= 200) : true)
         && (data.keys().hasAny(['sender_name']) ? (data.sender_name is string && data.sender_name.size() <= 100) : true)

@@ -53,8 +53,11 @@ const Hero: React.FC = () => {
 
         {/* Hero Title & Identity */}
         <div className="mb-8 w-full">
-          {/* Candidate Name - Large Expanded Typography */}
-          <h1 className="text-slate-100 text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black tracking-wider uppercase font-['Syne',sans-serif] mb-6 sm:mb-8 leading-none">
+          {/* Candidate Name - Clean Straight Line Expanded Typography */}
+          <h1
+            id="hero-candidate-name"
+            className="text-slate-100 text-2xl min-[480px]:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4.5rem] font-black tracking-normal sm:tracking-wide uppercase font-['Syne',sans-serif] mb-5 sm:mb-7 leading-tight whitespace-nowrap overflow-x-visible select-none"
+          >
             {personalInfo.name}
           </h1>
 

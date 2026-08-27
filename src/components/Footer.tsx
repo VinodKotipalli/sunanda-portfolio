@@ -50,8 +50,11 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Middle Typography */}
-      <div className="w-full flex justify-center items-center py-10 md:py-14 px-4">
-        <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5vw] font-['Syne',sans-serif] font-black tracking-tight uppercase select-none text-slate-800 hover:text-slate-700 transition-colors duration-300 text-center leading-none max-w-7xl">
+      <div className="w-full flex justify-center items-center py-10 md:py-14 px-4 overflow-hidden">
+        <h2
+          id="footer-candidate-name"
+          className="text-xl min-[480px]:text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-['Syne',sans-serif] font-black tracking-normal sm:tracking-tight uppercase select-none text-slate-800 hover:text-slate-700 transition-colors duration-300 text-center leading-tight whitespace-nowrap"
+        >
           {personalInfo.name}
         </h2>
       </div>
