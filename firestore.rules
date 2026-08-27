@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global catch-all default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['first_name', 'user_email', 'message', 'createdAt'])
+        && data.keys().hasOnly(['sender_uid', 'sender_email', 'sender_name', 'sender_photo', 'first_name', 'last_name', 'user_email', 'message', 'createdAt'])
+        && data.first_name is string && data.first_name.size() > 0 && data.first_name.size() <= 100
+        && (data.keys().hasAny(['last_name']) ? (data.last_name is string && data.last_name.size() <= 100) : true)
+        && data.user_email is string && data.user_email.size() > 0 && data.user_email.size() <= 200 && data.user_email.matches('^.+@.+$')
+        && (data.keys().hasAny(['sender_uid']) ? (data.sender_uid is string && data.sender_uid.size() <= 128 && (!isSignedIn() || data.sender_uid == request.auth.uid)) : true)
+        && (data.keys().hasAny(['sender_email']) ? (data.sender_email is string && data.sender_email.size() <= 200) : true)
+        && (data.keys().hasAny(['sender_name']) ? (data.sender_name is string && data.sender_name.size() <= 100) : true)
+        && (data.keys().hasAny(['sender_photo']) ? (data.sender_photo is string && data.sender_photo.size() <= 500) : true)
+        && data.message is string && data.message.size() > 0 && data.message.size() <= 2000
+        && data.createdAt == request.time;
+    }
+
+    // --- Messages Collection: Contact Form Inquiries ---
+    match /messages/{messageId} {
+      allow read: if isSignedIn() && (resource.data.sender_uid == request.auth.uid || request.auth.token.email == 'saivinodkotipalli2003@gmail.com');
+      allow create: if isValidId(messageId) && isValidMessage(incoming());
+      allow update, delete: if false;
+    }
+  }
+}

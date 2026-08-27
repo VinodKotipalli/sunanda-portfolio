@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "Message": {
+      "title": "Contact Message",
+      "description": "An inquiry message submitted through the contact form with optional Google verified credentials.",
+      "type": "object",
+      "properties": {
+        "sender_uid": { "type": "string", "maxLength": 128 },
+        "sender_email": { "type": "string", "maxLength": 200, "format": "email" },
+        "sender_name": { "type": "string", "maxLength": 100 },
+        "sender_photo": { "type": "string", "maxLength": 500 },
+        "first_name": { "type": "string", "maxLength": 100 },
+        "last_name": { "type": "string", "maxLength": 100 },
+        "user_email": { "type": "string", "maxLength": 200, "format": "email" },
+        "message": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "timestamp", "description": "The server timestamp when the message was created" }
+      },
+      "required": ["first_name", "user_email", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Stores contact messages and inquiries."
+    }
+  }
+}
