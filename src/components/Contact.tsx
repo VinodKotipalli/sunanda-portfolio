@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { Mail, Send, CheckCircle2, ExternalLink, Copy, Check } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { usePortfolio } from '../context/PortfolioContext';
 
@@ -25,7 +25,6 @@ const Contact: React.FC = () => {
     targetEmail: string;
   } | null>(null);
 
-  const [copied, setCopied] = useState(false);
   const targetEmail = personalInfo.email || 'karumuri2003@gmail.com';
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -161,14 +160,6 @@ const Contact: React.FC = () => {
     setUserEmail('');
     setMessage('');
     setLastSentData(null);
-  };
-
-  const handleCopyMessage = () => {
-    if (!lastSentData) return;
-    const text = `To: ${lastSentData.targetEmail}\nFrom: ${lastSentData.name} <${lastSentData.email}>\n\n${lastSentData.message}`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -367,46 +358,15 @@ const Contact: React.FC = () => {
 
                   {/* Success or Error Card */}
                   {status === 'success' && lastSentData && (
-                    <div className="p-4 rounded-2xl border bg-[#060e20] border-emerald-400/40 text-slate-200 flex flex-col gap-3 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                    <div className="p-4 rounded-2xl border bg-[#060e20] border-emerald-400/40 text-slate-200 flex flex-col gap-2 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
                       <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                         <CheckCircle2 className="w-5 h-5" />
                         <span>Inquiry Delivered Successfully!</span>
                       </div>
 
                       <p className="text-xs text-slate-300 leading-relaxed">
-                        Your message has been forwarded directly to <strong className="text-sky-300">{lastSentData.targetEmail}</strong> and logged in the portfolio inquiry database.
+                        Your message has been forwarded directly to <strong className="text-sky-300">{lastSentData.targetEmail}</strong>. Thank you for reaching out!
                       </p>
-
-                      {/* Quick Direct Email Launcher Options */}
-                      <div className="pt-2 border-t border-white/10 flex flex-wrap items-center gap-2.5">
-                        <a
-                          href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(lastSentData.targetEmail)}&su=${encodeURIComponent(`[Portfolio Inquiry] From ${lastSentData.name}`)}&body=${encodeURIComponent(lastSentData.message)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold transition-all group cursor-pointer"
-                        >
-                          <Mail className="w-3.5 h-3.5 text-red-400 group-hover:scale-110 transition-transform" />
-                          <span>Open in Gmail (Web)</span>
-                          <ExternalLink className="w-3 h-3 opacity-60" />
-                        </a>
-
-                        <a
-                          href={`mailto:${lastSentData.targetEmail}?subject=${encodeURIComponent(`[Portfolio Inquiry] From ${lastSentData.name}`)}&body=${encodeURIComponent(lastSentData.message)}`}
-                          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 text-xs font-bold transition-all group cursor-pointer"
-                        >
-                          <Send className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
-                          <span>Open in Mail Client</span>
-                        </a>
-
-                        <button
-                          type="button"
-                          onClick={handleCopyMessage}
-                          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-medium transition-all cursor-pointer"
-                        >
-                          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copied ? 'Copied' : 'Copy Text'}</span>
-                        </button>
-                      </div>
                     </div>
                   )}
 
