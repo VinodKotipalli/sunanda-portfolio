@@ -4,27 +4,15 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
-import { Resend } from "resend";
 
 const JWT_SECRET = process.env.JWT_SECRET || "admin-security-jwt-secret-key-2026-portfolio";
 const AWS_REGION = process.env.AWS_REGION || "us-east-1";
 const DYNAMODB_TABLE = process.env.AWS_DYNAMODB_TABLE_NAME || "AdminOtpTokens";
-const SES_SENDER = process.env.AWS_SES_SENDER_EMAIL || "security@admin-portfolio.com";
-
-// Lazy Resend Client Initialization
-let resendClient: Resend | null = null;
-function getResendClient(): Resend | null {
-  if (!resendClient && process.env.RESEND_API_KEY) {
-    resendClient = new Resend(process.env.RESEND_API_KEY);
-  }
-  return resendClient;
-}
 
 // Lazy Gemini AI Client Initialization
 let genAIClient: GoogleGenAI | null = null;
@@ -61,7 +49,6 @@ const awsCredentials =
       }
     : undefined;
 
-const sesClient = new SESClient({ region: AWS_REGION, credentials: awsCredentials });
 const snsClient = new SNSClient({ region: AWS_REGION, credentials: awsCredentials });
 const ddbClient = new DynamoDBClient({ region: AWS_REGION, credentials: awsCredentials });
 const docClient = DynamoDBDocumentClient.from(ddbClient);
@@ -495,83 +482,7 @@ async function startServer() {
         }
       }
 
-      // 2. Dispatch via Resend if RESEND_API_KEY is provided
-      if (process.env.RESEND_API_KEY) {
-        try {
-          const resend = getResendClient();
-          if (resend) {
-            const sendPromise = resend.emails.send({
-              from: process.env.RESEND_FROM_EMAIL || "Portfolio Inquiries <onboarding@resend.dev>",
-              to: [recipientEmail],
-              replyTo: effectiveEmail,
-              subject,
-              html: htmlBody,
-              text: textBody,
-            });
-
-            const { data, error } = await Promise.race([sendPromise, timeoutPromise(2500)]) as any;
-
-            if (!error && data) {
-              console.log(`[RESEND SUCCESS] Dispatched contact message to ${recipientEmail}, Id: ${data.id}`);
-              return res.json({
-                success: true,
-                provider: "RESEND",
-                messageId: data.id,
-                message: `Inquiry successfully sent to ${recipientEmail}!`,
-              });
-            } else if (error) {
-              console.warn("[RESEND WARNING]", error.message);
-            }
-          }
-        } catch (resendErr: any) {
-          console.warn("[RESEND ERROR]", resendErr?.message);
-        }
-      }
-
-      // 3. Dispatch via AWS SES if real credentials are explicitly available
-      if (awsCredentials && process.env.AWS_SES_SENDER_EMAIL) {
-        try {
-          const senderEmail = process.env.AWS_SES_SENDER_EMAIL;
-          const sesCommand = new SendEmailCommand({
-            Source: senderEmail,
-            Destination: {
-              ToAddresses: [recipientEmail],
-            },
-            ReplyToAddresses: [effectiveEmail],
-            Message: {
-              Subject: {
-                Data: subject,
-                Charset: "UTF-8",
-              },
-              Body: {
-                Html: {
-                  Data: htmlBody,
-                  Charset: "UTF-8",
-                },
-                Text: {
-                  Data: textBody,
-                  Charset: "UTF-8",
-                },
-              },
-            },
-          });
-
-          const sesPromise = sesClient.send(sesCommand);
-          const sesResponse = await Promise.race([sesPromise, timeoutPromise(2500)]) as any;
-          console.log(`[AWS SES SUCCESS] Dispatched contact message to ${recipientEmail}, MessageId: ${sesResponse.MessageId}`);
-
-          return res.json({
-            success: true,
-            provider: "AWS_SES",
-            messageId: sesResponse.MessageId,
-            message: `Inquiry successfully sent to ${recipientEmail} via AWS SES!`,
-          });
-        } catch (sesErr: any) {
-          console.warn(`[AWS SES NOTICE] SES dispatch notice: ${sesErr.message}`);
-        }
-      }
-
-      // 4. Standard SMTP fallback (Custom SMTP server like SendGrid, Mailgun, Brevo)
+      // 2. Standard SMTP fallback (Custom SMTP server like SendGrid, Mailgun, Brevo)
       if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
         try {
           const transporter = nodemailer.createTransport({
@@ -607,7 +518,40 @@ async function startServer() {
         }
       }
 
-      // 5. Fallback logger & immediate dispatch confirmation
+      // 5. Direct Email Forwarding Relay via FormSubmit (delivers directly into recipient's inbox)
+      try {
+        const formSubmitPromise = fetch(`https://formsubmit.co/ajax/${encodeURIComponent(recipientEmail)}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify({
+            name: fullName,
+            email: effectiveEmail,
+            message: message,
+            _subject: subject,
+            _replyto: effectiveEmail,
+            _captcha: "false",
+            _template: "table",
+          }),
+        });
+
+        const fsRes = await Promise.race([formSubmitPromise, timeoutPromise(3000)]) as any;
+        if (fsRes && fsRes.ok) {
+          const fsData = await fsRes.json().catch(() => null);
+          console.log(`[RELAY SUCCESS] Contact inquiry delivered to ${recipientEmail}:`, fsData);
+          return res.json({
+            success: true,
+            provider: "EMAIL_RELAY",
+            message: `Inquiry successfully forwarded to ${recipientEmail}!`,
+          });
+        }
+      } catch (relayErr: any) {
+        console.warn("[RELAY NOTICE] Email forwarder notice:", relayErr?.message || relayErr);
+      }
+
+      // 6. Fallback logger & immediate dispatch confirmation
       console.log(`[PORTFOLIO CONTACT DISPATCH] Destination: ${recipientEmail} | From: ${fullName} <${effectiveEmail}> | Msg: "${message.substring(0, 100)}..."`);
       return res.json({
         success: true,

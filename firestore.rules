@@ -36,9 +36,9 @@ service cloud.firestore {
 
     // --- Messages Collection: Contact Form Inquiries ---
     match /messages/{messageId} {
-      allow read: if isSignedIn() && (resource.data.sender_uid == request.auth.uid || request.auth.token.email == 'saivinodkotipalli2003@gmail.com');
+      allow read: if isSignedIn() && (resource.data.sender_uid == request.auth.uid || request.auth.token.email == 'saivinodkotipalli2003@gmail.com' || request.auth.token.email == 'karumuri2003@gmail.com');
       allow create: if isValidId(messageId) && isValidMessage(incoming());
-      allow update, delete: if false;
+      allow update, delete: if isSignedIn() && (request.auth.token.email == 'saivinodkotipalli2003@gmail.com' || request.auth.token.email == 'karumuri2003@gmail.com');
     }
   }
 }

@@ -53,20 +53,20 @@ const Hero: React.FC = () => {
 
         {/* Hero Title & Identity */}
         <div className="mb-8 w-full">
-          {/* Candidate Name - Clean Straight Line Expanded Typography (Guaranteed 100% visible) */}
+          {/* Candidate Name - Responsive and mobile-safe */}
           <h1
             id="hero-candidate-name"
-            className="text-slate-100 text-[clamp(1.35rem,4.2vw,3.5rem)] font-black tracking-tight sm:tracking-normal uppercase font-['Syne',sans-serif] mb-4 sm:mb-6 leading-tight whitespace-nowrap select-none max-w-full"
+            className="text-slate-100 text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight sm:tracking-normal uppercase font-['Syne',sans-serif] mb-3 sm:mb-6 leading-tight break-words sm:whitespace-nowrap select-none max-w-full"
           >
             {personalInfo.name}
           </h1>
 
-          {/* Attached Role Title in Exact Dual-Tone Style */}
-          <div className="font-['Outfit',sans-serif] font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] leading-[1.05] tracking-tight">
-            <div className="text-slate-100 mb-1">
+          {/* Role Title in Unified Single Color */}
+          <div className="font-['Outfit',sans-serif] font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] leading-[1.05] tracking-tight text-slate-100">
+            <div className="mb-1">
               AWS Cloud
             </div>
-            <div className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400">
+            <div>
               Operations Engineer
             </div>
           </div>
