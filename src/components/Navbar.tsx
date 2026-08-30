@@ -37,17 +37,17 @@ const Navbar: React.FC = () => {
           : 'bg-transparent py-5'
       }`}
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
-        {/* Brand Name (Left) */}
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-3">
+        {/* Brand Name (Left) - Guaranteed 100% visible on all mobile screen widths */}
         <a
           href="#"
           id="navbar-brand-logo"
-          className="text-white text-xs xs:text-sm sm:text-base md:text-lg font-black tracking-wider uppercase flex items-center gap-1.5 sm:gap-2 group shrink-0 min-w-0"
+          className="text-white font-black uppercase flex items-center gap-1.5 sm:gap-2 group shrink-0 min-w-0"
         >
-          <span className="bg-gradient-to-tr from-sky-500 to-blue-600 text-white w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-black text-[10px] sm:text-xs shadow-[0_0_15px_rgba(14,165,233,0.5)] border border-sky-400/30 shrink-0">
+          <span className="bg-gradient-to-tr from-sky-500 to-blue-600 text-white w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-black text-[9px] sm:text-xs shadow-[0_0_15px_rgba(14,165,233,0.5)] border border-sky-400/30 shrink-0">
             SK
           </span>
-          <span className="font-['Syne',sans-serif] font-bold tracking-tight text-slate-100 group-hover:text-sky-400 transition-colors whitespace-nowrap text-xs xs:text-sm sm:text-base inline-block">
+          <span className="font-['Syne',sans-serif] font-bold tracking-tight text-slate-100 group-hover:text-sky-400 transition-colors whitespace-nowrap text-[11px] min-[360px]:text-[12px] min-[390px]:text-[13px] sm:text-base inline-block">
             {personalInfo.name}
           </span>
         </a>
@@ -95,26 +95,26 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile Controls (Theme Toggle + Menu Trigger) */}
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-1.5 shrink-0">
           <button
             onClick={toggleTheme}
             id="mobile-nav-theme-btn"
-            className="p-2 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 flex items-center justify-center cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 flex items-center justify-center cursor-pointer"
             aria-label={isDark ? 'Switch to High-Contrast Light Mode' : 'Switch to Dark Mode'}
           >
-            {isDark ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-sky-600" />}
+            {isDark ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-600" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-white p-2 focus:outline-none"
+            className="text-white p-1.5 sm:p-2 focus:outline-none flex items-center justify-center cursor-pointer"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
               </svg>
             )}
