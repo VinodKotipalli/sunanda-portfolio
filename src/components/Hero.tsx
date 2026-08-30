@@ -61,12 +61,12 @@ const Hero: React.FC = () => {
             {personalInfo.name}
           </h1>
 
-          {/* Role Title in Unified Single Color */}
-          <div className="font-['Outfit',sans-serif] font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] leading-[1.05] tracking-tight text-slate-100">
-            <div className="mb-1">
+          {/* Role Title with Cool and Fresh RGB Styling */}
+          <div className="font-['Outfit',sans-serif] font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] leading-[1.05] tracking-tight">
+            <div className="mb-1 text-rgb-fresh">
               AWS Cloud
             </div>
-            <div>
+            <div className="text-rgb-fresh">
               Operations Engineer
             </div>
           </div>
