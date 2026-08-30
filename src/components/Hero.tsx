@@ -53,10 +53,10 @@ const Hero: React.FC = () => {
 
         {/* Hero Title & Identity */}
         <div className="mb-8 w-full">
-          {/* Candidate Name - Responsive and mobile-safe */}
+          {/* Candidate Name - Fluidly scaled to fit on any mobile width */}
           <h1
             id="hero-candidate-name"
-            className="text-slate-100 text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight sm:tracking-normal uppercase font-['Syne',sans-serif] mb-3 sm:mb-6 leading-tight break-words sm:whitespace-nowrap select-none max-w-full"
+            className="text-slate-100 text-[clamp(1.15rem,5.2vw,3.2rem)] font-black tracking-tight uppercase font-['Syne',sans-serif] mb-3 sm:mb-6 leading-tight select-none max-w-full"
           >
             {personalInfo.name}
           </h1>

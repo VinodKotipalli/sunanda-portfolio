@@ -42,12 +42,12 @@ const Navbar: React.FC = () => {
         <a
           href="#"
           id="navbar-brand-logo"
-          className="text-white text-sm sm:text-base md:text-lg font-black tracking-wider uppercase flex items-center gap-2 group shrink-0 min-w-0"
+          className="text-white text-xs xs:text-sm sm:text-base md:text-lg font-black tracking-wider uppercase flex items-center gap-1.5 sm:gap-2 group shrink-0 min-w-0"
         >
-          <span className="bg-gradient-to-tr from-sky-500 to-blue-600 text-white w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(14,165,233,0.5)] border border-sky-400/30 shrink-0">
+          <span className="bg-gradient-to-tr from-sky-500 to-blue-600 text-white w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-black text-[10px] sm:text-xs shadow-[0_0_15px_rgba(14,165,233,0.5)] border border-sky-400/30 shrink-0">
             SK
           </span>
-          <span className="font-['Syne',sans-serif] font-bold tracking-tight text-slate-100 group-hover:text-sky-400 transition-colors truncate max-w-[150px] xs:max-w-[220px] sm:max-w-none inline-block">
+          <span className="font-['Syne',sans-serif] font-bold tracking-tight text-slate-100 group-hover:text-sky-400 transition-colors whitespace-nowrap text-xs xs:text-sm sm:text-base inline-block">
             {personalInfo.name}
           </span>
         </a>
