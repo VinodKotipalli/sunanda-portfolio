@@ -1,25 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from 'firebase/firestore';
-import { Mail, Send, CheckCircle2, Inbox, ExternalLink, RefreshCw, MessageSquare, Copy, Check } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { Mail, Send, CheckCircle2, ExternalLink, Copy, Check } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { usePortfolio } from '../context/PortfolioContext';
-
-interface SavedMessage {
-  id: string;
-  first_name: string;
-  last_name?: string;
-  user_email: string;
-  message: string;
-  recipient?: string;
-  createdAt?: any;
-}
 
 const Contact: React.FC = () => {
   const { data } = usePortfolio();
   const { personalInfo, socialLinks } = data;
 
-  const [activeTab, setActiveTab] = useState<'form' | 'inbox'>('form');
   const formRef = useRef<HTMLFormElement | null>(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -37,44 +26,7 @@ const Contact: React.FC = () => {
   } | null>(null);
 
   const [copied, setCopied] = useState(false);
-
-  // Live Inbox State
-  const [inquiries, setInquiries] = useState<SavedMessage[]>([]);
-  const [loadingInquiries, setLoadingInquiries] = useState(false);
-
   const targetEmail = personalInfo.email || 'karumuri2003@gmail.com';
-
-  const loadInquiries = async () => {
-    setLoadingInquiries(true);
-    try {
-      const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'), limit(15));
-      const snap = await getDocs(q);
-      const list: SavedMessage[] = [];
-      snap.forEach((docSnap) => {
-        const d = docSnap.data();
-        list.push({
-          id: docSnap.id,
-          first_name: d.first_name || 'Anonymous',
-          last_name: d.last_name || '',
-          user_email: d.user_email || d.sender_email || '',
-          message: d.message || '',
-          recipient: d.recipient || targetEmail,
-          createdAt: d.createdAt?.toDate ? d.createdAt.toDate().toLocaleString() : new Date().toLocaleString(),
-        });
-      });
-      setInquiries(list);
-    } catch (err: any) {
-      console.warn('Inquiries fetch notice:', err?.message || err);
-    } finally {
-      setLoadingInquiries(false);
-    }
-  };
-
-  useEffect(() => {
-    if (activeTab === 'inbox') {
-      loadInquiries();
-    }
-  }, [activeTab]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -269,114 +221,9 @@ const Contact: React.FC = () => {
             </div>
           </div>
 
-          {/* Tab Selector */}
-          <div className="flex items-center gap-2 mb-8 bg-[#060a14]/90 p-1.5 rounded-2xl border border-sky-500/20 w-fit">
-            <button
-              onClick={() => setActiveTab('form')}
-              id="contact-tab-form-btn"
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold font-['Space_Grotesk',sans-serif] uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'form'
-                  ? 'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.4)]'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Send className="w-4 h-4" />
-              <span>Contact Form</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('inbox')}
-              id="contact-tab-inbox-btn"
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold font-['Space_Grotesk',sans-serif] uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'inbox'
-                  ? 'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.4)]'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Inbox className="w-4 h-4" />
-              <span>Messages Received ({inquiries.length > 0 ? inquiries.length : 'Live'})</span>
-            </button>
-          </div>
-
-          {/* View Tab */}
-          {activeTab === 'inbox' ? (
-            /* Live Inquiries Viewer */
-            <div className="flex flex-col gap-6 w-full font-['Plus_Jakarta_Sans',sans-serif]">
-              <div className="flex items-center justify-between border-b border-sky-500/20 pb-4">
-                <div>
-                  <h3 className="text-xl font-bold font-['Syne',sans-serif] text-slate-100 flex items-center gap-2">
-                    <Inbox className="w-5 h-5 text-sky-400" />
-                    Direct Inquiries Received
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Delivered directly to <span className="text-sky-300 font-bold">{targetEmail}</span>
-                  </p>
-                </div>
-                <button
-                  onClick={loadInquiries}
-                  disabled={loadingInquiries}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 text-xs font-bold transition-colors cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingInquiries ? 'animate-spin' : ''}`} />
-                  Refresh
-                </button>
-              </div>
-
-              {loadingInquiries ? (
-                <div className="py-12 flex flex-col items-center justify-center text-slate-400 text-sm gap-3">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-400" />
-                  <span>Loading inquiries from database...</span>
-                </div>
-              ) : inquiries.length === 0 ? (
-                <div className="py-12 text-center text-slate-400 text-sm bg-[#060913]/60 rounded-2xl border border-sky-500/20 p-8">
-                  <MessageSquare className="w-8 h-8 text-slate-500 mx-auto mb-2 opacity-50" />
-                  <p className="font-semibold text-slate-300">No messages yet.</p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Send a test inquiry using the Contact Form tab to see it appear here instantly!
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4 max-h-[420px] overflow-y-auto pr-2 custom-scrollbar">
-                  {inquiries.map((inq) => (
-                    <div
-                      key={inq.id}
-                      className="bg-[#060913]/80 border border-sky-500/25 rounded-2xl p-5 hover:border-sky-400/50 transition-all flex flex-col gap-3"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-2.5">
-                        <div>
-                          <span className="font-bold text-slate-100 text-sm mr-2">
-                            {inq.first_name} {inq.last_name}
-                          </span>
-                          <a
-                            href={`mailto:${inq.user_email}`}
-                            className="text-xs text-sky-400 hover:underline font-mono"
-                          >
-                            &lt;{inq.user_email}&gt;
-                          </a>
-                        </div>
-                        <span className="text-[11px] font-mono text-slate-400">{inq.createdAt}</span>
-                      </div>
-                      <p className="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed">
-                        {inq.message}
-                      </p>
-                      <div className="flex items-center justify-end gap-3 pt-2">
-                        <a
-                          href={`mailto:${inq.user_email}?subject=Re: Inquiry from ${inq.first_name}&body=Hi ${inq.first_name},\n\nThank you for reaching out!`}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-bold transition-colors"
-                        >
-                          <Send className="w-3 h-3" />
-                          Reply via Email
-                        </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            /* Direct Contact Form */
-            <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-10 w-full font-['Plus_Jakarta_Sans',sans-serif]">
-              {/* Input Fields */}
+          {/* Direct Contact Form */}
+          <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-10 w-full font-['Plus_Jakarta_Sans',sans-serif]">
+            {/* Input Fields */}
               <div className="flex flex-col md:flex-row gap-10 md:gap-16 w-full">
                 {/* Left Column */}
                 <div className="flex-1 flex flex-col gap-8">
@@ -574,7 +421,6 @@ const Contact: React.FC = () => {
                 </div>
               </div>
             </form>
-          )}
         </div>
       </div>
     </section>
