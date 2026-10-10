@@ -48,7 +48,7 @@ const GeminiChatbot: React.FC = () => {
     {
       id: 'welcome-1',
       role: 'model',
-      content: `Hello! I am **Sunanda Sri Karumuri's AWS Cloud Ops & DevOps AI Advisor**.\n\nI can provide deep technical insights into Sunanda's cloud architectures, AWS certifications (SAA-C03 & Cloud Practitioner), Terraform IaC, Kubernetes clusters, and CI/CD pipelines.\n\nHow can I assist your engineering team today?`,
+      content: `Hello! I am **Sunanda Sri Karumuri's AWS DevOps AI Advisor**.\n\nI can provide deep technical insights into Sunanda's AWS DevOps architectures, AWS certifications (SAA-C03 & Cloud Practitioner), Terraform IaC, Kubernetes clusters, and CI/CD pipelines.\n\nHow can I assist your engineering team today?`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       modelUsed: 'gemini-3.5-flash',
       mode: 'general',
@@ -218,7 +218,7 @@ const GeminiChatbot: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 font-mono truncate max-w-[200px]">
-                    AWS Ops & DevOps Knowledge Base
+                    AWS DevOps Knowledge Base
                   </p>
                 </div>
               </div>

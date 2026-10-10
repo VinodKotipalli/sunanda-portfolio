@@ -23,7 +23,7 @@ const Experience: React.FC = () => {
             PROFESSIONAL EXPERIENCE
           </h2>
           <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-light font-['Plus_Jakarta_Sans',sans-serif] leading-relaxed">
-            Enterprise cloud operations experience building high-availability monitoring platforms and automated pipelines.
+            Enterprise AWS DevOps experience building high-availability monitoring platforms and automated CI/CD pipelines.
           </p>
         </div>
 

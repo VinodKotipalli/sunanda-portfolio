@@ -38,7 +38,7 @@ const Hero: React.FC = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/30 backdrop-blur-md shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
             <span className="text-sky-300 text-xs font-['JetBrains_Mono',monospace] font-bold tracking-wider uppercase">
-              AWS CLOUD OPERATIONS ENGINEER
+              AWS DEVOPS ENGINEER
             </span>
           </div>
 
@@ -62,12 +62,9 @@ const Hero: React.FC = () => {
           </h1>
 
           {/* Role Title with Cool and Fresh RGB Styling */}
-          <div className="font-['Outfit',sans-serif] font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] leading-[1.05] tracking-tight">
-            <div className="mb-1 text-rgb-fresh">
-              AWS Cloud
-            </div>
+          <div className="font-['Outfit',sans-serif] font-black text-3xl sm:text-5xl md:text-6xl lg:text-[5.2rem] leading-[1.08] tracking-tight">
             <div className="text-rgb-fresh">
-              Operations Engineer
+              AWS DevOps Engineer
             </div>
           </div>
         </div>

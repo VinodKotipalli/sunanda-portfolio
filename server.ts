@@ -590,8 +590,8 @@ async function startServer() {
       // - "general" -> Balanced tasks using gemini-3.5-flash
       let modelName = "gemini-3.5-flash";
       const config: any = {
-        systemInstruction: `You are Sunanda Sri Karumuri's AWS Cloud Operations & DevOps AI Assistant and Career Advisor.
-Sunanda Sri Karumuri is an AWS Cloud Operations Engineer specializing in:
+        systemInstruction: `You are Sunanda Sri Karumuri's AWS DevOps AI Assistant and Career Advisor.
+Sunanda Sri Karumuri is an AWS DevOps Engineer specializing in:
 - AWS Cloud Infrastructure: EC2, S3, VPC, IAM, RDS, Route53, CloudWatch, CloudTrail, Lambda, SES, SNS, DynamoDB.
 - Infrastructure as Code (IaC): Terraform (modules, state management, automated provisioning).
 - CI/CD Pipelines: Jenkins, GitHub Actions, automated testing, container builds.

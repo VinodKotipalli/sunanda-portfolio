@@ -23,7 +23,7 @@ export function createResumePdfDoc(): jsPDF {
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(40, 50, 65);
-  doc.text('AWS Cloud Operations Engineer', pageWidth / 2, y, { align: 'center' });
+  doc.text('AWS DevOps Engineer', pageWidth / 2, y, { align: 'center' });
   y += 14;
 
   // Contact Info
@@ -56,7 +56,7 @@ export function createResumePdfDoc(): jsPDF {
   doc.setFontSize(8.5);
   doc.setTextColor(30, 41, 59);
   const summaryText =
-    'AWS Cloud Operations Engineer with 2+ years of experience designing, deploying, and maintaining cloud monitoring and infrastructure solutions on AWS. Skilled in Infrastructure as Code using Terraform, CI/CD automation with Jenkins, and implementing centralized monitoring platforms using Prometheus, Grafana, Node Exporter, and Alert manager. Experienced in monitoring AWS EC2 instances, Linux servers, and Docker containers, developing Grafana dashboards with PromQL, and configuring automated alerting through Slack and email notifications. Proficient in Linux administration, AWS services including EC2, IAM, and CloudWatch, and applying AWS Well-Architected Framework principles to improve reliability, security, performance, and operational excellence. Strong experience in technical documentation, incident response, and collaborating with cross-functional teams to enhance system availability and reduce Mean Time to Detect (MTTD).';
+    'AWS DevOps Engineer with 2+ years of experience designing, deploying, and maintaining cloud monitoring and infrastructure solutions on AWS. Skilled in Infrastructure as Code using Terraform, CI/CD automation with Jenkins, and implementing centralized monitoring platforms using Prometheus, Grafana, Node Exporter, and Alert manager. Experienced in monitoring AWS EC2 instances, Linux servers, and Docker containers, developing Grafana dashboards with PromQL, and configuring automated alerting through Slack and email notifications. Proficient in Linux administration, AWS services including EC2, IAM, and CloudWatch, and applying AWS Well-Architected Framework principles to improve reliability, security, performance, and operational excellence. Strong experience in technical documentation, incident response, and collaborating with cross-functional teams to enhance system availability and reduce Mean Time to Detect (MTTD).';
   const summaryLines = doc.splitTextToSize(summaryText, contentWidth);
   doc.text(summaryLines, marginX, y, { lineHeightFactor: 1.15 });
   y += summaryLines.length * 9.8 + 6;
@@ -113,7 +113,7 @@ export function createResumePdfDoc(): jsPDF {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(15, 23, 42);
-  doc.text('AWS Cloud Operations Engineer', marginX, y);
+  doc.text('AWS DevOps Engineer', marginX, y);
   y += 10.5;
 
   doc.setFont('helvetica', 'normal');
@@ -132,7 +132,7 @@ export function createResumePdfDoc(): jsPDF {
     'Monitored AWS EC2 instances, Linux servers, and Docker containers to improve operational visibility and system reliability; performed proactive capacity planning and troubleshot exporter, scrape, and connectivity issues by analyzing Prometheus target status and logs.',
     'Applied AWS Well-Architected Framework best practices across the Reliability, Security, Cost Optimization, Performance Efficiency, and Operational Excellence pillars when designing and reviewing monitoring and cloud infrastructure solutions.',
     'Authored and maintained technical documentation, dashboard guides, operational runbooks, and standard operating procedures (SOPs) for monitoring, alerting, and incident response, improving knowledge transfer and reducing onboarding time.',
-    'Collaborated with DevOps, Cloud Operations, and application teams to implement monitoring standards and support production incident management through faster root cause analysis and reduced Mean Time to Detect (MTTD).'
+    'Collaborated with DevOps, Cloud Infrastructure, and application teams to implement monitoring standards and support production incident management through faster root cause analysis and reduced Mean Time to Detect (MTTD).'
   ];
 
   expBullets.forEach((bullet) => {

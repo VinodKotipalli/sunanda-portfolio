@@ -44,8 +44,6 @@ const defaultFullData: PortfolioFullData = {
   socialLinks: initialSocialLinks,
 };
 
-const STORAGE_KEY = 'sunanda_portfolio_data_v5';
-
 interface PortfolioContextType {
   data: PortfolioFullData;
 }
@@ -53,57 +51,24 @@ interface PortfolioContextType {
 const PortfolioContext = createContext<PortfolioContextType | null>(null);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Clear any old obsolete keys from earlier versions
+  // Purge any stale cached versions so user always sees the latest data
   useEffect(() => {
     try {
-      localStorage.removeItem('saivinod_portfolio_data_v15');
-      localStorage.removeItem('saivinod_portfolio_data_v1');
-      localStorage.removeItem('sunanda_portfolio_data_v1');
-      localStorage.removeItem('sunanda_portfolio_data_v2');
-      localStorage.removeItem('sunanda_portfolio_data_v3');
-      localStorage.removeItem('sunanda_portfolio_data_v4');
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('portfolio_data') || key.includes('sunanda_') || key.includes('saivinod_'))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
     } catch (e) {
       // ignore
     }
   }, []);
 
-  const [data] = useState<PortfolioFullData>(() => {
-    try {
-      localStorage.removeItem('saivinod_portfolio_data_v15');
-      localStorage.removeItem('sunanda_portfolio_data_v1');
-      localStorage.removeItem('sunanda_portfolio_data_v2');
-      localStorage.removeItem('sunanda_portfolio_data_v3');
-      localStorage.removeItem('sunanda_portfolio_data_v4');
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        // Only use if name, email, education, github, and linkedin match current updated profile
-        if (
-          parsed?.personalInfo?.name === initialPersonalInfo.name &&
-          parsed?.personalInfo?.email === initialPersonalInfo.email &&
-          parsed?.education?.institution === initialEducationData.institution &&
-          parsed?.socialLinks?.github === initialSocialLinks.github &&
-          parsed?.socialLinks?.linkedin === initialSocialLinks.linkedin
-        ) {
-          return { ...defaultFullData, ...parsed };
-        }
-      }
-    } catch (e) {
-      console.error('Failed to load portfolio data from localStorage', e);
-    }
-    return defaultFullData;
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (e) {
-      console.error('Failed to save portfolio data to localStorage', e);
-    }
-  }, [data]);
-
   return (
-    <PortfolioContext.Provider value={{ data }}>
+    <PortfolioContext.Provider value={{ data: defaultFullData }}>
       {children}
     </PortfolioContext.Provider>
   );

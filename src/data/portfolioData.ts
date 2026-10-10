@@ -1,6 +1,6 @@
 // ============================================================
 // portfolioData.ts — Accurate configuration for Sunanda Sri Karumuri
-// Strictly aligned with the AWS Cloud Operations Engineer resume.
+// Strictly aligned with the AWS DevOps Engineer resume.
 // ============================================================
 
 export interface CertificateItem {
@@ -61,7 +61,7 @@ export const personalInfo = {
   name: "Sunanda Sri Karumuri",
   firstName: "Sunanda",
   brandName: "Sunanda Sri Karumuri",
-  title: "AWS Cloud Operations Engineer",
+  title: "AWS DevOps Engineer",
   location: "Tenali, Andhra Pradesh 522213",
   phone: "+91 9347260159",
   email: "karumuri2003@gmail.com",
@@ -69,7 +69,7 @@ export const personalInfo = {
     primary: "karumuri2003@gmail.com",
   },
   summary:
-    "AWS Cloud Operations Engineer with 2+ years of experience designing, deploying, and maintaining cloud monitoring and infrastructure solutions on AWS. Skilled in Infrastructure as Code using Terraform, CI/CD automation with Jenkins, and implementing centralized monitoring platforms using Prometheus, Grafana, Node Exporter, and Alert manager. Experienced in monitoring AWS EC2 instances, Linux servers, and Docker containers, developing Grafana dashboards with PromQL, and configuring automated alerting through Slack and email notifications. Proficient in Linux administration, AWS services including EC2, IAM, and CloudWatch, and applying AWS Well-Architected Framework principles to improve reliability, security, performance, and operational excellence. Strong experience in technical documentation, incident response, and collaborating with cross-functional teams to enhance system availability and reduce Mean Time to Detect (MTTD).",
+    "AWS DevOps Engineer with 2+ years of experience designing, deploying, and maintaining cloud monitoring and infrastructure solutions on AWS. Skilled in Infrastructure as Code using Terraform, CI/CD automation with Jenkins, and implementing centralized monitoring platforms using Prometheus, Grafana, Node Exporter, and Alert manager. Experienced in monitoring AWS EC2 instances, Linux servers, and Docker containers, developing Grafana dashboards with PromQL, and configuring automated alerting through Slack and email notifications. Proficient in Linux administration, AWS services including EC2, IAM, and CloudWatch, and applying AWS Well-Architected Framework principles to improve reliability, security, performance, and operational excellence. Strong experience in technical documentation, incident response, and collaborating with cross-functional teams to enhance system availability and reduce Mean Time to Detect (MTTD).",
   resumeUrl: "/Sunanda_Sri_Karumuri_Resume.pdf",
 };
 
@@ -81,13 +81,13 @@ export const socialLinks = {
 
 export const heroContent = {
   greeting: "Hi, I'm Sunanda Sri Karumuri",
-  titleHighlight: "AWS Cloud Operations Engineer",
+  titleHighlight: "AWS DevOps Engineer",
   subtitle:
-    "AWS Cloud Operations Engineer with 2+ years of experience in AWS Cloud Infrastructure, Terraform IaC, Prometheus & Grafana Monitoring, Jenkins CI/CD, Docker & Kubernetes.",
+    "AWS DevOps Engineer with 2+ years of experience in AWS Cloud Infrastructure, Terraform IaC, Prometheus & Grafana Monitoring, Jenkins CI/CD, Docker & Kubernetes.",
   ctaPrimary: { text: "View Experience", href: "#experience" },
   ctaSecondary: {
     text: "Contact Me",
-    href: "mailto:karumuri2003@gmail.com?subject=Opportunity Inquiry – Sunanda Sri Karumuri&body=Hello Sunanda,%0D%0A%0D%0AI reviewed your AWS Cloud Operations Engineer profile and would like to discuss an opportunity.%0D%0A%0D%0ABest Regards,",
+    href: "mailto:karumuri2003@gmail.com?subject=Opportunity Inquiry – Sunanda Sri Karumuri&body=Hello Sunanda,%0D%0A%0D%0AI reviewed your AWS DevOps Engineer profile and would like to discuss an opportunity.%0D%0A%0D%0ABest Regards,",
   },
   ctaResume: { text: "Download Resume", href: "/Sunanda_Sri_Karumuri_Resume.pdf" },
 };
@@ -185,7 +185,7 @@ export const technicalSkillsCategories: SkillCategory[] = [
 ];
 
 export const experienceData: ExperienceItem = {
-  role: "AWS Cloud Operations Engineer",
+  role: "AWS DevOps Engineer",
   company: "Tata Consultancy Services (TCS)",
   location: "Hyderabad",
   duration: "June 2024 – June 2026",
@@ -490,7 +490,7 @@ export const footerContent = {
     "Engineered for scale · Built for the future",
   ],
   credential: "The future belongs to those who build with purpose.",
-  copyright: `© ${new Date().getFullYear()} Sunanda Sri Karumuri | AWS Cloud Operations Engineer`,
+  copyright: `© ${new Date().getFullYear()} Sunanda Sri Karumuri | AWS DevOps Engineer`,
 };
 
 export const emailjsConfig = {

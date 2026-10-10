@@ -39,7 +39,7 @@ const TechnicalSkills: React.FC = () => {
             TECHNICAL SKILLS
           </h2>
           <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-light font-['Plus_Jakarta_Sans',sans-serif] leading-relaxed">
-            Enterprise cloud operations, automated CI/CD pipelines, container orchestration, and comprehensive AWS infrastructure tools.
+            Enterprise AWS DevOps solutions, automated CI/CD pipelines, container orchestration, and comprehensive AWS infrastructure tools.
           </p>
         </div>
 
